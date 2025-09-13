@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 public class RippleButton {
-    public static View createRippleButton(Context context, View content, int color){
+    public static View createRippleButton(Context context, View content, int color, ButtonCallback callback){
         LinearLayout layout = new LinearLayout(context);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -35,6 +35,10 @@ public class RippleButton {
                 bg,
                 mask
         );
+
+        layout.setOnClickListener((layoutView)->{
+            callback.onClick();
+        });
 
         layout.setBackground(rippleBg);
         layout.addView(content);

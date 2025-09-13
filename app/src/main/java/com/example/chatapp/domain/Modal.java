@@ -3,12 +3,12 @@ package com.example.chatapp.domain;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 public class Modal {
-    public static FrameLayout createModal(Context context, LinearLayout content, float[] radius, int position){
+    public static FrameLayout createModal(Context context,  float[] radius, int position){
         FrameLayout root = new FrameLayout(context);
 
         // Params
@@ -25,7 +25,6 @@ public class Modal {
         );
 
         root.setLayoutParams(rootParams);
-        content.setLayoutParams(params);
 
         // background
         root.setBackgroundColor(Color.argb(128, 0, 0, 0));
@@ -34,11 +33,19 @@ public class Modal {
         bg.setCornerRadii(radius);
         bg.setColor(Color.WHITE);
 
-        content.setBackground(bg);
-        content.setPadding(20, 20, 20, 20);
+        root.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
 
-        content.setOnClickListener((contentView)->{});
-        root.addView(content);
+            @Override
+            public void onChildViewAdded(View parent, View child) {
+                child.setLayoutParams(params);
+                child.setBackground(bg);
+                child.setPadding(20, 20, 20, 20);
+            }
+
+            @Override
+            public void onChildViewRemoved(View parent, View child) {}
+        });
+
         return root;
     }
 }

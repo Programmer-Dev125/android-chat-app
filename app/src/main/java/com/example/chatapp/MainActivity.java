@@ -50,8 +50,14 @@ public class MainActivity extends Activity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == 1 && resultCode == RESULT_OK && data != null){
+        super.onActivityResult(requestCode, resultCode, data);
 
-        }else if(requestCode == 2 && resultCode == RESULT_OK && data != null){}
+        if(requestCode == 1 && resultCode == RESULT_OK && data != null){
+           System.out.println("This is capture");
+           System.out.println(data);
+        }else if(requestCode == 2 && resultCode == RESULT_OK && data != null){
+           System.out.println("this is selected");
+           System.out.println(data);
+        }
     }
 }

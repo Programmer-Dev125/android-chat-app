@@ -177,15 +177,19 @@ public class InformationPage {
         });
 
         upper.setOnClickListener((view)->{
-            LinearLayout layoutContent = modelContent(context);
             float[] arr =  {
                     0, 0f,
                     0f,  0f,
                     20f, 20f,
                     20f,  20f
             };
-            FrameLayout modalLayout = Modal.createModal(context, layoutContent, arr, Gravity.TOP);
+
+            FrameLayout modalLayout = Modal.createModal(context,  arr, Gravity.TOP);
             ModalCallback callback = new ModalCallback() {};
+            LinearLayout layoutContent = modelContent(context, rootInfo, modalLayout, callback);
+
+            modalLayout.addView(layoutContent);
+
 
             if(isFocus) {
                 input.clearFocus();
@@ -201,12 +205,14 @@ public class InformationPage {
             });
 
             callback.openModal(rootInfo, modalLayout, layoutContent, context);
+            System.out.println(modalLayout.getChildAt(0));
         });
 
         return root;
     }
-    public static LinearLayout modelContent(Context context){
+    public static LinearLayout modelContent(Context context, FrameLayout root, FrameLayout modelLayout, ModalCallback callback){
          LinearLayout layout = new LinearLayout(context);
+         Activity activity = (Activity) context;
 
          GradientDrawable bg = new GradientDrawable();
          bg.setSize(0, 30);
@@ -221,24 +227,21 @@ public class InformationPage {
          selectText.setTextColor(Color.WHITE);
          captureText.setTextColor(Color.WHITE);
 
-         View button_select = RippleButton.createRippleButton(context, selectText, Color.parseColor("#00ca53"));
-         View button_capture = RippleButton.createRippleButton(context, captureText, Color.parseColor("#3b3b3b"));
+         View button_select = RippleButton.createRippleButton(context, selectText, Color.parseColor("#00ca53"), ()->{
+             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+             activity.startActivityForResult(intent, 1);
+             callback.closeModal(root, modelLayout, layout);
+         });
+
+         View button_capture = RippleButton.createRippleButton(context, captureText, Color.parseColor("#3b3b3b"), ()->{
+             Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+             intent.setType("image/*");
+             activity.startActivityForResult(intent, 2);
+             callback.closeModal(root, modelLayout, layout);
+         });
 
          button_select.setPadding(0, 15, 0, 15);
          button_capture.setPadding(0, 15, 0, 15);
-
-         button_capture.setOnClickListener((captureView)->{
-             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-             intent.setType("image/*");
-             Activity activity = ((Activity) context);
-             activity.startActivityForResult(intent, 1);
-         });
-         button_select.setOnClickListener((selectView)->{
-             Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
-             intent.setType("image/*");
-             Activity activity = ((Activity) context);
-             activity.startActivityForResult(intent, 2);
-         });
 
          layout.addView(button_select);
          layout.addView(button_capture);
