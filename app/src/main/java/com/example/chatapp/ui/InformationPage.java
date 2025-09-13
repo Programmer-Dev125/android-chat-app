@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -14,29 +15,31 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.view.ViewPropertyAnimator;
+import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.window.OnBackInvokedDispatcher;
 
 import com.example.chatapp.R;
 import com.example.chatapp.domain.Modal;
 import com.example.chatapp.domain.ModalCallback;
+import com.example.chatapp.domain.RippleButton;
 import com.example.chatapp.domain.Screen;
 import com.example.chatapp.domain.Text;
 
 public class InformationPage {
     private static Boolean isFocus = false;
-    private static Boolean isModalOn = false;
-    public static void toggleModal(){
-        isModalOn = !isModalOn;
-    }
     public static FrameLayout getInfo(Context context){
+        FrameLayout rootInfo = new FrameLayout(context);
         LinearLayout layout = new LinearLayout(context);
         LinearLayout upper = new LinearLayout(context);
         EditText input = new EditText(context);
@@ -45,6 +48,12 @@ public class InformationPage {
         layout.setOrientation(LinearLayout.VERTICAL);
 
         // All Params
+        FrameLayout.LayoutParams rootInfoParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        rootInfo.setLayoutParams(rootInfoParams);
+
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                 (int) (context.getResources().getDisplayMetrics().widthPixels * 0.80),
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -136,7 +145,9 @@ public class InformationPage {
         layout.addView(upper);
         layout.addView(input);
 
-        FrameLayout root = Screen.createScreen(context, layout, layoutParams, (view) ->{
+        rootInfo.addView(layout);
+
+        FrameLayout root = Screen.createScreen(context, rootInfo,  (view) ->{
             view.setOnTouchListener((scrollView, event)->{
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
                     if(isFocus){
@@ -175,11 +186,21 @@ public class InformationPage {
             };
             FrameLayout modalLayout = Modal.createModal(context, layoutContent, arr, Gravity.TOP);
             ModalCallback callback = new ModalCallback() {};
+
+            if(isFocus) {
+                input.clearFocus();
+                InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if(inputManager != null){
+                    inputManager.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                }
+                return;
+            }
+
             modalLayout.setOnClickListener((modalView) ->{
-                callback.closeModal(root, modalLayout, layoutContent);
+                callback.closeModal(rootInfo, modalLayout, layoutContent);
             });
-            callback.openModal(root, modalLayout, layoutContent);
-            modalLayout.dispatchApplyWindowInsets(root.getRootWindowInsets());
+
+            callback.openModal(rootInfo, modalLayout, layoutContent, context);
         });
 
         return root;
@@ -187,8 +208,40 @@ public class InformationPage {
     public static LinearLayout modelContent(Context context){
          LinearLayout layout = new LinearLayout(context);
 
-         TextView text = Text.getTextScreeen(context, "This is the Modal text", 20);
-         layout.addView(text);
+         GradientDrawable bg = new GradientDrawable();
+         bg.setSize(0, 30);
+
+         layout.setOrientation(LinearLayout.VERTICAL);
+         layout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+         layout.setDividerDrawable(bg);
+
+         TextView selectText = Text.getTextScreeen(context, "Select Image", 16);
+         TextView captureText = Text.getTextScreeen(context, "Capture Image", 16);
+
+         selectText.setTextColor(Color.WHITE);
+         captureText.setTextColor(Color.WHITE);
+
+         View button_select = RippleButton.createRippleButton(context, selectText, Color.parseColor("#00ca53"));
+         View button_capture = RippleButton.createRippleButton(context, captureText, Color.parseColor("#3b3b3b"));
+
+         button_select.setPadding(0, 15, 0, 15);
+         button_capture.setPadding(0, 15, 0, 15);
+
+         button_capture.setOnClickListener((captureView)->{
+             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+             intent.setType("image/*");
+             Activity activity = ((Activity) context);
+             activity.startActivityForResult(intent, 1);
+         });
+         button_select.setOnClickListener((selectView)->{
+             Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+             intent.setType("image/*");
+             Activity activity = ((Activity) context);
+             activity.startActivityForResult(intent, 2);
+         });
+
+         layout.addView(button_select);
+         layout.addView(button_capture);
 
          return layout;
     }

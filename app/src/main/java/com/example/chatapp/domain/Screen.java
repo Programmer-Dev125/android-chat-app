@@ -13,7 +13,7 @@ import android.os.Build;
 import android.widget.ScrollView;
 
 public class Screen {
-    public static FrameLayout createScreen(Context context, View layout, ViewGroup.LayoutParams layoutParams, ScreenCallback callback){
+    public static FrameLayout createScreen(Context context, View layout, ScreenCallback callback){
         FrameLayout root = new FrameLayout(context);
         ScrollView scrollView = new ScrollView(context);
 
@@ -57,7 +57,8 @@ public class Screen {
             });
 
         scrollView.setBackgroundColor(Color.WHITE);
-        scrollView.addView(layout, layoutParams);
+        scrollView.setFillViewport(true);
+        scrollView.addView(layout);
 
         if(callback != null){
             callback.toggleInput(scrollView);
