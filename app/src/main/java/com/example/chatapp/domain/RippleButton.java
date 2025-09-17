@@ -8,19 +8,25 @@ import android.graphics.drawable.RippleDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-public class RippleButton {
-    public static View createRippleButton(Context context, View content, int color, ButtonCallback callback){
-        LinearLayout layout = new LinearLayout(context);
+import com.example.chatapp.model.ButtonView;
+
+public class RippleButton extends LinearLayout {
+
+    public RippleButton(Context context, View content, int color){
+        super(context);
+        createRippleButton(content, color);
+    }
+    public void createRippleButton(View content, int color){
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        layout.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        layout.setLayoutParams(layoutParams);
+
+        setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        setLayoutParams(layoutParams);
 
         GradientDrawable bg = new GradientDrawable();
         bg.setColor(color);
@@ -36,12 +42,8 @@ public class RippleButton {
                 mask
         );
 
-        layout.setOnClickListener((layoutView)->{
-            callback.onClick();
-        });
-
-        layout.setBackground(rippleBg);
-        layout.addView(content);
-        return layout;
+        setBackground(rippleBg);
+        setPadding(0, 15, 0, 15);
+        addView(content);
     }
 }

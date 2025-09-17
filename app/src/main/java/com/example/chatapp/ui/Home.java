@@ -14,15 +14,21 @@ import android.widget.TextView;
 import androidx.constraintlayout.helper.widget.Grid;
 
 import com.example.chatapp.R;
+import com.example.chatapp.domain.Screen;
 import com.example.chatapp.domain.Text;
 
-public class Home {
-    public static FrameLayout getHomeScreen(Context context){
+public class Home extends Screen {
+
+    public Home(Context context){
+        super(context);
+    }
+    @Override
+    protected FrameLayout createContent(Context context){
         FrameLayout root = new FrameLayout(context);
         root.addView(getUpperView(context));
-        return root;
+        return  root;
     }
-    private static LinearLayout getUpperView(Context context){
+    private LinearLayout getUpperView(Context context){
         LinearLayout rootLayout = new LinearLayout(context);
         GridLayout grids = new GridLayout(context);
 
@@ -35,7 +41,7 @@ public class Home {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
 
-        TextView title = Text.getTextScreeen(context, "ChatApp", 20);
+        Text title = new Text(context, "ChatApp", 20);
         ImageView image = new ImageView(context);
 
         image.setImageResource(R.drawable.setting);

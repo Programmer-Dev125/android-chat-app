@@ -3,6 +3,7 @@ package com.example.chatapp;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.ImageDecoder;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -12,20 +13,22 @@ import android.view.View;
 import android.view.WindowInsetsController;
 import android.widget.FrameLayout;
 
-import com.example.chatapp.domain.Screen;
-import com.example.chatapp.model.NavigationModel;
-import com.example.chatapp.ui.InformationPage;
+import com.example.chatapp.model.NavigationView;
+import com.example.chatapp.ui.infoPage.InformationPage;
+import com.example.chatapp.ui.Landing;
 
 
-public class MainActivity extends Activity{
+public class MainActivity extends Activity {
 
-    private final NavigationModel navModel = new NavigationModel();
+    private final NavigationView navModel = new NavigationView();
+    private InformationPage infoPage;
 
     @Override
     public void onCreate(Bundle saveInstance){
         super.onCreate(saveInstance);
-        String currScreen = navModel.getCurrentScreen();
-        FrameLayout root = InformationPage.getInfo(this);
+        boolean logged = getIntent().getBooleanExtra("logged", false);
+        infoPage = new InformationPage(this);
+        FrameLayout root = logged ? new Landing(this) : infoPage;
         setContentView(root);
     }
 
@@ -53,11 +56,26 @@ public class MainActivity extends Activity{
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == 1 && resultCode == RESULT_OK && data != null){
-           System.out.println("This is capture");
-           System.out.println(data);
+           Bundle extras = data.getExtras();
+           Bitmap mapImage = (Bitmap) extras.get("data");
+           if(mapImage != null){
+               infoPage.setImagePerson(mapImage);
+           }
         }else if(requestCode == 2 && resultCode == RESULT_OK && data != null){
-           System.out.println("this is selected");
-           System.out.println(data);
+           try{
+               Uri selImage = data.getData();
+               ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), selImage);
+               Bitmap map = ImageDecoder.decodeBitmap(source);
+               if(map != null){
+                   infoPage.setImagePerson(map);
+               }
+           }catch (Exception err){
+               System.out.println(err.getMessage());
+           }
         }
+    }
+    @Override
+    public void onBackPressed(){
+        System.out.println("nothing");
     }
 }

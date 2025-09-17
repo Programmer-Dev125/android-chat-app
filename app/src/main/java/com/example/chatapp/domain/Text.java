@@ -7,15 +7,16 @@ import android.widget.TextView;
 
 import java.io.File;
 
-public class Text {
-    public static TextView getTextScreeen(Context context, String str, int size){
-        TextView text = new TextView(context);
+public class Text extends TextView {
+
+    public Text(Context context, String str, int size){
+        super(context);
+        createText(context, str, size);
+    }
+    private void createText(Context context, String str, int size){
         Typeface styles = Typeface.createFromAsset(context.getAssets(), "fonts/Rubik-Regular.ttf");
-
-        text.setTypeface(styles);
-        text.setText(str);
-        text.setTextSize(size);
-
-        return text;
+        setTypeface(styles);
+        setText(str);
+        setTextSize(size);
     }
 }

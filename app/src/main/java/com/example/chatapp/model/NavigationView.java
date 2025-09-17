@@ -2,10 +2,10 @@ package com.example.chatapp.model;
 
 import com.example.chatapp.data.Navigation;
 
-public final class NavigationModel {
+public final class NavigationView {
     private final Navigation navigate = new Navigation();
 
-    public NavigationModel(){
+    public NavigationView(){
         addScreen("Home");
     }
     public String getCurrentScreen(){
