@@ -26,10 +26,6 @@ public class Modal extends FrameLayout{
 
         setLayoutParams(rootParams);
 
-        setOnApplyWindowInsetsListener((view, windowInsets) ->{
-            return screenView.onApplyInsets(windowInsets, rootParams);
-        });
-
         // background
         setBackgroundColor(Color.argb(128, 0, 0, 0));
         addView(content);

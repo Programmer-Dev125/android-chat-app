@@ -35,16 +35,7 @@ public abstract class Screen extends FrameLayout{
 
         scrollView.setBackgroundColor(Color.WHITE);
         scrollView.setFillViewport(true);
-        scrollView.setClickable(true);
         scrollView.addView(layout);
-
-        scrollView.setOnTouchListener((v, event)->{
-            if(event.getAction() == MotionEvent.ACTION_DOWN){
-                screenView.onScreenClick(context);
-                return true;
-            }
-            return false;
-        });
 
         getViewTreeObserver().addOnGlobalLayoutListener(() ->{
             screenView.onHideKeyboard(context, this);

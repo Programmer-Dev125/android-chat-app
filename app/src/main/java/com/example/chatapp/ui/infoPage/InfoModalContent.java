@@ -1,8 +1,11 @@
 package com.example.chatapp.ui.infoPage;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -12,6 +15,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.example.chatapp.domain.RippleButton;
 import com.example.chatapp.domain.Text;
+import com.example.chatapp.model.ButtonView;
 import com.example.chatapp.model.ModalView;
 
 public class InfoModalContent extends LinearLayout {
@@ -23,12 +27,10 @@ public class InfoModalContent extends LinearLayout {
             20f, 20f
     };
 
-    private final ModalView modalView;
+    private final ButtonView buttonWatcher = new ButtonView();
 
-
-    public InfoModalContent(Context context, ModalView modalView){
+    public InfoModalContent(Context context){
         super(context);
-        this.modalView = modalView;
         modalContent(context);
     }
     public void modalContent(Context context){
@@ -36,6 +38,8 @@ public class InfoModalContent extends LinearLayout {
                   ViewGroup.LayoutParams.MATCH_PARENT,
                   ViewGroup.LayoutParams.WRAP_CONTENT
           ));
+
+          Activity activity = (Activity) context;
 
           GradientDrawable line = new GradientDrawable();
           line.setSize(0, 30);
@@ -53,21 +57,21 @@ public class InfoModalContent extends LinearLayout {
 
           setPadding(20, 20, 20, 20);
 
-          Text selText = new Text(context, "Select Image", 20);
-          Text capText = new Text(context, "Capture Image", 20);
-
-          selText.setTextColor(Color.WHITE);
-          capText.setTextColor(Color.WHITE);
+          Text selText = new Text(context, "Select Image", 16, Color.WHITE);
+          Text capText = new Text(context, "Capture Image", 16, Color.WHITE);
 
           RippleButton selBtn = new RippleButton(context, selText, Color.parseColor("#0ad35b"));
           RippleButton capBtn = new RippleButton(context, capText, Color.parseColor("#9ea4b0"));
 
+
           selBtn.setOnClickListener((selView)->{
-                System.out.println(this.modalView);
+              buttonWatcher.selImage(activity);
+              ModalView.closeBottomToTop();
           });
 
           capBtn.setOnClickListener((capView)->{
-              System.out.println(this.modalView);
+               buttonWatcher.capImage(activity);
+               ModalView.closeBottomToTop();
           });
 
 

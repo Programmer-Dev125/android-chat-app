@@ -8,17 +8,18 @@ import android.widget.FrameLayout;
 
 public final class ModalView {
 
-    private ViewGroup parent;
-    private ViewGroup child;
-    private ViewGroup content;
-    public boolean isOn = false;
+    public static ViewGroup parentView;
+    public static ViewGroup childView;
+    public static ViewGroup contentView;
+
+
     public void childAdded(View child, FrameLayout.LayoutParams params, GradientDrawable bg, int[] padding){
         child.setLayoutParams(params);
         child.setBackground(bg);
         child.setPadding(padding[0], padding[1], padding[2], padding[3]);
     }
 
-    public void openTopToBottom(Context context, ViewGroup parent, ViewGroup child, ViewGroup content){
+    public static void openTopToBottom(Context context, ViewGroup parent, ViewGroup child, ViewGroup content){
         parent.addView(child);
 
         content.measure(
@@ -34,15 +35,13 @@ public final class ModalView {
         content.setTranslationY(-height);
         content.animate().translationYBy(height).setDuration(200);
 
-        this.parent = parent;
-        this.child = child;
-        this.content = content;
-        isOn = true;
+        parentView = parent;
+        childView = child;
+        contentView = content;
     }
 
-    public void closeBottomToTop(){
-        isOn = false;
-        final float height = content.getMeasuredHeight();
-        content.animate().translationY(-height).setDuration(200).withEndAction(() -> parent.removeView(child));
+    public static void closeBottomToTop(){
+        final float height = contentView.getMeasuredHeight();
+        contentView.animate().translationY(-height).setDuration(200).withEndAction(() -> parentView.removeView(childView));
     }
 }

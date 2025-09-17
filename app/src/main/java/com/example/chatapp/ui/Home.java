@@ -41,7 +41,7 @@ public class Home extends Screen {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
 
-        Text title = new Text(context, "ChatApp", 20);
+        Text title = new Text(context, "ChatApp", 20, Color.WHITE);
         ImageView image = new ImageView(context);
 
         image.setImageResource(R.drawable.setting);

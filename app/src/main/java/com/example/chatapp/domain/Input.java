@@ -8,23 +8,23 @@ import com.example.chatapp.model.InputView;
 
 
 public class Input extends EditText {
-    private final InputView InputWatcher = new InputView();
+    private GradientDrawable bg;
 
-    public Input(Context context, int bgColor, float radius, int strokeColor, int strokeWidth, int focusStrokeColor){
-        super(context);
-        createInput(bgColor, radius, strokeColor, strokeWidth, focusStrokeColor);
+    public GradientDrawable getBg(){
+        return bg;
     }
-    private void createInput(int bgColor, float radius, int strokeColor, int strokeWidth, int focusStrokeColor){
 
-        GradientDrawable bg = new GradientDrawable();
+    public Input(Context context, int bgColor, float radius, int strokeColor, int strokeWidth){
+        super(context);
+        createInput(bgColor, radius, strokeColor, strokeWidth);
+    }
+    private void createInput(int bgColor, float radius, int strokeColor, int strokeWidth){
+
+        bg = new GradientDrawable();
         bg.setCornerRadius(radius);
         bg.setStroke(strokeWidth, strokeColor);
         bg.setColor(bgColor);
 
         setBackground(bg);
-
-        setOnFocusChangeListener((inputView, hasFocus)->{
-            InputWatcher.focusStroke(bg, strokeColor, strokeWidth, hasFocus, focusStrokeColor);
-        });
     }
 }

@@ -1,6 +1,7 @@
 package com.example.chatapp.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -15,7 +16,7 @@ public class Landing extends Screen {
     }
     @Override
     protected FrameLayout createContent(Context context){
-          Text text = new Text(context, "This is a text", 20);
+          Text text = new Text(context, "This is a text", 20, Color.BLACK);
           addView(text);
           return this;
     }

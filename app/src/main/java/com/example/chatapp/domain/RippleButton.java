@@ -27,6 +27,7 @@ public class RippleButton extends LinearLayout {
 
         setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
         setLayoutParams(layoutParams);
+        setOrientation(LinearLayout.HORIZONTAL);
 
         GradientDrawable bg = new GradientDrawable();
         bg.setColor(color);

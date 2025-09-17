@@ -12,16 +12,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 public final class ScreenView {
-    public void onScreenClick(Context context){
-        View focusView = ((Activity) context).getWindow().getCurrentFocus();
-        if(focusView != null){
-            focusView.clearFocus();
-            InputMethodManager inp = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if(inp != null){
-                inp.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
-            }
-        }
-    }
 
     public void onHideKeyboard(Context context, View view){
         Rect rect = new Rect();

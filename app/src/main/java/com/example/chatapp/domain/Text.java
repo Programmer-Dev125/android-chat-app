@@ -9,14 +9,15 @@ import java.io.File;
 
 public class Text extends TextView {
 
-    public Text(Context context, String str, int size){
+    public Text(Context context, String str, int size, int color){
         super(context);
-        createText(context, str, size);
+        createText(context, str, size, color);
     }
-    private void createText(Context context, String str, int size){
+    private void createText(Context context, String str, int size, int color){
         Typeface styles = Typeface.createFromAsset(context.getAssets(), "fonts/Rubik-Regular.ttf");
         setTypeface(styles);
         setText(str);
         setTextSize(size);
+        setTextColor(color);
     }
 }
